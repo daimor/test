@@ -21,7 +21,8 @@ jobs:
           "store/intersystems/irishealth-community:2020.1.0.215.0"
         ]
     runs-on: ubuntu-latest
-    steps:
+    steps:  
+      - uses: actions/checkout@master
       - name: Dump GitHub context
         env:
           GITHUB_CONTEXT: ${{ toJson(github) }}
