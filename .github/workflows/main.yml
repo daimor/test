@@ -1,6 +1,12 @@
 name: CI
 
-on:
+on: 
+  push:
+    branches:
+      - master
+  pull_request:
+    branches:
+      - master
   release:
     types:
       - created
@@ -22,7 +28,11 @@ jobs:
         run: echo "$GITHUB_CONTEXT"
       - name: if release
         if: github.event_name == 'release'
-        run: echo yes
+        run: |
+          VERSION=${{ github.event.release.tag_name }}
+          echo version - ${VERSION/v/}
+          sed -i -E "s/<Version>(.*)<\/Version>/<Version>${VERSION/v/}<\/Version>/" module.xml
+          cat module.xml
       - name: if release
         if: github.event_name == 'release' && matrix.image == 'store/intersystems/iris-community:2020.1.0.215.0'
         run: echo yes
