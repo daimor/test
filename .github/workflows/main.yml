@@ -1,25 +1,7 @@
 name: CI
-
-on: 
-  push:
-    branches:
-      - master
-  pull_request:
-    branches:
-      - master
-  release:
-    types:
-      - created
+on: release
 jobs:
   build:
-    strategy:
-      matrix:
-        image: [
-          "store/intersystems/iris-community:2019.4.0.383.0",
-          "store/intersystems/irishealth-community:2019.4.0.383.0",
-          "store/intersystems/iris-community:2020.1.0.215.0",
-          "store/intersystems/irishealth-community:2020.1.0.215.0"
-        ]
     runs-on: ubuntu-latest
     steps:  
       - uses: actions/checkout@master
@@ -27,13 +9,23 @@ jobs:
         env:
           GITHUB_CONTEXT: ${{ toJson(github) }}
         run: echo "$GITHUB_CONTEXT"
-      - name: if release
-        if: github.event_name == 'release'
-        run: |
-          VERSION=${{ github.event.release.tag_name }}
-          echo version - ${VERSION/v/}
-          sed -i -E "s/<Version>(.*)<\/Version>/<Version>${VERSION/v/}<\/Version>/" module.xml
-          cat module.xml
-      - name: if release
-        if: github.event_name == 'release' && matrix.image == 'store/intersystems/iris-community:2020.1.0.215.0'
-        run: echo yes
+      - name: Dump job context
+        env:
+          JOB_CONTEXT: ${{ toJson(job) }}
+        run: echo "$JOB_CONTEXT"
+      - name: Dump steps context
+        env:
+          STEPS_CONTEXT: ${{ toJson(steps) }}
+        run: echo "$STEPS_CONTEXT"
+      - name: Dump runner context
+        env:
+          RUNNER_CONTEXT: ${{ toJson(runner) }}
+        run: echo "$RUNNER_CONTEXT"
+      - name: Dump strategy context
+        env:
+          STRATEGY_CONTEXT: ${{ toJson(strategy) }}
+        run: echo "$STRATEGY_CONTEXT"
+      - name: Dump matrix context
+        env:
+          MATRIX_CONTEXT: ${{ toJson(matrix) }}
+        run: echo "$MATRIX_CONTEXT"
