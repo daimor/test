@@ -35,5 +35,4 @@ jobs:
           node-version: 12.x
       - name: vsce
         run: |
-          npm install -g vsce ovsx
-          vsce -V
+          npx vsce -V
