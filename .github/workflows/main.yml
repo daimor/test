@@ -1,8 +1,5 @@
 name: CI
-on: 
-  release:
-    types:
-      - released
+on: push
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -32,3 +29,11 @@ jobs:
         env:
           MATRIX_CONTEXT: ${{ toJson(matrix) }}
         run: echo "$MATRIX_CONTEXT"
+      - name: Use Node.js
+        uses: actions/setup-node@v1
+        with:
+          node-version: 12.x
+      - name: vsce
+        run: |
+          npm install -g vsce ovsx
+          vsce -V
