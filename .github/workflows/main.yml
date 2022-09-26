@@ -4,7 +4,7 @@ env:
   name: |
     iris-community
     irishealth-community
-  matrix: '{"iris-community:2021.2.0.651.0":{"name":"iris-community","version":"2021.2.0.651.0"},"iris-community:2022.2.0.334.0":{"name":"iris-community","version":"2022.2.0.334.0"},"iris-community:2022.1.0.209.0":{"name":"iris-community","version":"2022.1.0.209.0"}}'
+  matrix: '{"iris-community-2021.2.0.651.0":{"name":"iris-community","version":"2021.2.0.651.0"},"iris-community-2022.2.0.334.0":{"name":"iris-community","version":"2022.2.0.334.0"},"iris-community-2022.1.0.209.0":{"name":"iris-community","version":"2022.1.0.209.0"}}'
 jobs:
   prepare-matrix:
     runs-on: ubuntu-latest
