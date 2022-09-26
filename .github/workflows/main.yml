@@ -39,9 +39,9 @@ jobs:
   build:
     # needs: 
     #   - prepare-matrix
-    # strategy:
-    #   matrix: 
-    #     image: ${{ fromJSON(env.matrix ) }}
+    strategy:
+      matrix: 
+        image: ${{ fromJSON(env.matrix) }}
     runs-on: ubuntu-latest
     steps:
       - name: Dump GitHub context
@@ -68,7 +68,7 @@ jobs:
         env:
           MATRIX_CONTEXT: ${{ toJson(matrix) }}
         run: echo "$MATRIX_CONTEXT"
-      - name: Dump matrix context
+      - name: Dump env context
         env:
           ENV_CONTEXT: ${{ toJson(env) }}
         run: echo "$ENV_CONTEXT"
