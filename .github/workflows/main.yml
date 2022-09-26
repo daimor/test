@@ -14,8 +14,8 @@ jobs:
       - id: set-matrix
         run: |
           echo ::set-output name=matrix::${{ env.matrix }}
-          # echo ::set-output name=matrix::`jq -Rsc 'split("\n") | map(select(length > 0))' <<< $'${{ env.name }}' `
-          # echo ::set-output name=version::`jq -Rsc 'split("\n") | map(select(length > 0))' <<< $'${{ env.latest }}\n${{ env.version }}\n${{ env.preview }}' `
+        # echo ::set-output name=matrix::`jq -Rsc 'split("\n") | map(select(length > 0))' <<< $'${{ env.name }}' `
+        # echo ::set-output name=version::`jq -Rsc 'split("\n") | map(select(length > 0))' <<< $'${{ env.latest }}\n${{ env.version }}\n${{ env.preview }}' `
   matrix:
     runs-on: ubuntu-latest
     needs: 
@@ -23,8 +23,8 @@ jobs:
     steps:
       - run: echo "${{ needs.prepare-matrix.outputs.matrix }}"
   build:
-    # needs: 
-    #   - prepare-matrix
+    needs: 
+      - prepare-matrix
     strategy:
       matrix: 
         image: ${{ fromJSON(needs.prepare-matrix.outputs.matrix) }}
