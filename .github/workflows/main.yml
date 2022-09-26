@@ -14,9 +14,17 @@ jobs:
         run: |
           echo ::set-output name=matrix::`jq -Rsc 'split("\n") | map(select(length > 0))' <<< $'${{ env.name }}' `
           # echo ::set-output name=version::`jq -Rsc 'split("\n") | map(select(length > 0))' <<< $'${{ env.latest }}\n${{ env.version }}\n${{ env.preview }}' `
+  matrix:
+    runs-on: ubuntu-latest
+    needs: 
+      - prepare-matrix
+    steps:
+      - run: echo "${{ toJSON(needs.prepare-matrix.outputs.matrix) }}"
   build:
+    needs: 
+      - prepare-matrix
     strategy:
-      matrix: ${{ fromJSON(needs.version.outputs.matrix ) }}
+      matrix: ${{ fromJSON(needs.prepare-matrix.outputs.matrix ) }}
     runs-on: ubuntu-latest
     steps:
       - name: Dump matrix context
