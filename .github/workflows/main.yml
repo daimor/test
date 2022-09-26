@@ -36,10 +36,7 @@ jobs:
       - prepare-matrix
     strategy:
       matrix: 
-        image: 
-          - iris-community:2021.2.0.651.0
-          - iris-community:2022.2.0.334.0
-          - iris-community:2022.1.0.209.0
+        image: ${{ fromJson(needs.prepare-matrix.outputs) }}
     runs-on: ubuntu-latest
     steps:
       - name: Dump GitHub context
