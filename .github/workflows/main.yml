@@ -4,7 +4,6 @@ env:
   name: |
     iris-community
     irishealth-community
-  matrix: '{"iris-community-2021.2.0.651.0":{"name":"iris-community","version":"2021.2.0.651.0"},"iris-community-2022.2.0.334.0":{"name":"iris-community","version":"2022.2.0.334.0"},"iris-community-2022.1.0.209.0":{"name":"iris-community","version":"2022.1.0.209.0"}}'
 jobs:
   prepare-matrix:
     runs-on: ubuntu-latest
@@ -13,9 +12,12 @@ jobs:
     steps:
       - id: set-matrix
         run: |
-          echo ::set-output name=matrix::${{ env.matrix }}
-        # echo ::set-output name=matrix::`jq -Rsc 'split("\n") | map(select(length > 0))' <<< $'${{ env.name }}' `
-        # echo ::set-output name=version::`jq -Rsc 'split("\n") | map(select(length > 0))' <<< $'${{ env.latest }}\n${{ env.version }}\n${{ env.preview }}' `
+          matrix=""
+          for n in $name; do
+            tags=$(curl -su ":" https://containers.intersystems.com/v2/intersystems/${n}/tags/list | jq -r '.tags[]')
+            for tag in $tags; do matrix+="${n}:${tag}\n"; done
+          done
+          echo ::set-output name=matrix::`echo -e $matrix | jq -Rsc 'split("\n")'`
   matrix:
     runs-on: ubuntu-latest
     needs: 
@@ -34,7 +36,10 @@ jobs:
       - prepare-matrix
     strategy:
       matrix: 
-        image: ${{ fromJSON(needs.prepare-matrix.outputs.matrix) }}
+        image: 
+          - iris-community:2021.2.0.651.0
+          - iris-community:2022.2.0.334.0
+          - iris-community:2022.1.0.209.0
     runs-on: ubuntu-latest
     steps:
       - name: Dump GitHub context
