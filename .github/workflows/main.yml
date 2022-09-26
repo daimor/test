@@ -27,7 +27,7 @@ jobs:
     steps:
       - id: set-matrix
         run: |
-          echo ::set-output name=matrix::"${{ env.matrix }}"
+          echo ::set-output name=matrix::`jq -c '.' <<< $'${{ env.matrix }}' `
           # echo ::set-output name=matrix::`jq -Rsc 'split("\n") | map(select(length > 0))' <<< $'${{ env.name }}' `
           # echo ::set-output name=version::`jq -Rsc 'split("\n") | map(select(length > 0))' <<< $'${{ env.latest }}\n${{ env.version }}\n${{ env.preview }}' `
   matrix:
