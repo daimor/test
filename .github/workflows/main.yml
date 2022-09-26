@@ -24,7 +24,8 @@ jobs:
     needs: 
       - prepare-matrix
     strategy:
-      matrix: ${{ fromJSON(needs.prepare-matrix.outputs.matrix ) }}
+      matrix: 
+        image: ${{ fromJSON(needs.prepare-matrix.outputs.matrix ) }}
     runs-on: ubuntu-latest
     steps:
       - name: Dump matrix context
