@@ -21,7 +21,14 @@ jobs:
     needs: 
       - prepare-matrix
     steps:
-      - run: echo "${{ needs.prepare-matrix.outputs.matrix }}"
+      - name: Dump needs context
+        env:
+          NEEDS_CONTEXT: ${{ toJson(needs) }}
+        run: echo "$NEEDS_CONTEXT"
+      - name: Dump needs context
+        env:
+          NEEDS_CONTEXT: ${{ toJson(needs.prepare-matrix.outputs) }}
+        run: echo "$NEEDS_CONTEXT"
   build:
     needs: 
       - prepare-matrix
