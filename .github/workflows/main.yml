@@ -15,9 +15,9 @@ jobs:
           matrix=""
           for n in $name; do
             tags=$(curl -su ":" https://containers.intersystems.com/v2/intersystems/${n}/tags/list | jq -r '.tags[]')
-            for tag in $tags; do matrix+="${n}:${tag}\n"; done
-          done
-          echo ::set-output name=matrix::`echo -e $matrix | jq -Rsc 'split("\n")'`
+            for tag in $tags; do matrix+='"'${n}:${tag}'",'; done
+          done;
+          echo ::set-output name=matrix::"[${matrix%?}]"
   matrix:
     runs-on: ubuntu-latest
     needs: 
