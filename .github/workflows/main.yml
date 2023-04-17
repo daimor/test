@@ -1,69 +1,16 @@
-name: CI
-on: push
-env:
-  name: |
-    iris-community
-    irishealth-community
+name: Cloud Run Deploy
+
+on:
+  push:
+    branches:
+    - master
+    - main
+  workflow_dispatch:
+
 jobs:
-  prepare-matrix:
-    runs-on: ubuntu-latest
-    outputs:
-      image: ${{ steps.set-matrix.outputs.image }}
-    steps:
-      - id: set-matrix
-        run: |
-          image=""
-          for n in $name; do
-            tags=$(curl -su ":" https://containers.intersystems.com/v2/intersystems/${n}/tags/list | jq -r '.tags[]')
-            for tag in $tags; do image+='"'${n}:${tag}'",'; done
-          done;
-          echo ::set-output name=image::"[${image%?}]"
-  matrix:
-    runs-on: ubuntu-latest
-    needs: 
-      - prepare-matrix
-    steps:
-      - name: Dump needs context
-        env:
-          NEEDS_CONTEXT: ${{ toJson(needs) }}
-        run: echo "$NEEDS_CONTEXT"
-      - name: Dump needs context
-        env:
-          NEEDS_CONTEXT: ${{ toJson(needs.prepare-matrix.outputs) }}
-        run: echo "$NEEDS_CONTEXT"
-  build:
-    needs: 
-      - prepare-matrix
-    strategy:
-      matrix: 
-        image: ${{ fromJson(needs.prepare-matrix.outputs.image) }}
-    runs-on: ubuntu-latest
-    steps:
-      - name: Dump GitHub context
-        env:
-          GITHUB_CONTEXT: ${{ toJson(github) }}
-        run: echo "$GITHUB_CONTEXT"
-      - name: Dump job context
-        env:
-          JOB_CONTEXT: ${{ toJson(job) }}
-        run: echo "$JOB_CONTEXT"
-      - name: Dump steps context
-        env:
-          STEPS_CONTEXT: ${{ toJson(steps) }}
-        run: echo "$STEPS_CONTEXT"
-      - name: Dump runner context
-        env:
-          RUNNER_CONTEXT: ${{ toJson(runner) }}
-        run: echo "$RUNNER_CONTEXT"
-      - name: Dump strategy context
-        env:
-          STRATEGY_CONTEXT: ${{ toJson(strategy) }}
-        run: echo "$STRATEGY_CONTEXT"
-      - name: Dump matrix context
-        env:
-          MATRIX_CONTEXT: ${{ toJson(matrix) }}
-        run: echo "$MATRIX_CONTEXT"
-      - name: Dump env context
-        env:
-          ENV_CONTEXT: ${{ toJson(env) }}
-        run: echo "$ENV_CONTEXT"
+  deploy:
+    uses: intersystems-community/demo-deployment/.github/workflows/deployment.yml@master
+    with:
+      name: superset
+    secrets:
+      SERVICE_ACCOUNT_KEY: ${{ secrets.SERVICE_ACCOUNT_KEY }}
