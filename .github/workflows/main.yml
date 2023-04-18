@@ -11,6 +11,8 @@ jobs:
   deploy:
     uses: intersystems-community/demo-deployment/.github/workflows/deployment.yml@master
     with:
-      name: superset
+      name: testing
+      port: 52773
+      memory: 512Mi
     secrets:
       SERVICE_ACCOUNT_KEY: ${{ secrets.SERVICE_ACCOUNT_KEY }}
